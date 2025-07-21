@@ -40,10 +40,24 @@
                         <input type="submit" name="submitConnect" value="Se connecter">
                     </form>
                     <p><a href="?page=createAccount">Créer un compte</a><p>
-                    ';    
+                    ';   
             }
             else {
                 echo "Bonjour, " . $_SESSION['user']['nomUtilisateurs'] . " " . $_SESSION['user']['prenomUtilisateurs'] . ". Vous êtes connectés";
+                $sql = "SELECT * FROM livres";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo '<br>';
+                foreach ($results as $key => $value) {
+                    foreach ($value as $key2 => $value2) {
+                        if ($key2 !== "id_livres"){
+                            echo "$key2: $value2";
+                            echo "<br>";
+                        }
+                    }
+                }
+                
                 echo '
                 <form method="POST">
                     <input type="submit" name="deconnexion" value="Se déconnecter">
@@ -78,6 +92,8 @@
                     session_destroy();
                     header("Location: index.php");
             }
+
+            
         ?>
     </body>
 </html>
