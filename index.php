@@ -44,18 +44,29 @@
             }
             else {
                 echo "Bonjour, " . $_SESSION['user']['nomUtilisateurs'] . " " . $_SESSION['user']['prenomUtilisateurs'] . ". Vous êtes connectés";
-                $sql = "SELECT * FROM livres";
+                $sql = "SELECT nomLivres AS 'Nom du livre', annee AS 'Année', dispoLivres AS 'Disponibilité' FROM livres";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo '<br>';
+                echo '<br>';
                 foreach ($results as $key => $value) {
                     foreach ($value as $key2 => $value2) {
-                        if ($key2 !== "id_livres"){
-                            echo "$key2: $value2";
-                            echo "<br>";
+                        if ($key2 == "Disponibilité"){
+                            if ($value2 == 1){
+                                echo "$key2: Disponible";
+                            }
+                            else {
+                                echo "$key2: Indisponible";
+                            }
                         }
+                        else {
+                            echo "$key2: $value2";
+                        }
+                        echo "<br>";
                     }
+                    echo "<br>";
+                    echo "<br>";
                 }
                 
                 echo '
