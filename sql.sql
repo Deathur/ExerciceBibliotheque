@@ -45,9 +45,9 @@ CREATE TABLE
     Emprunts (
         id_emprunts int AUTO_INCREMENT NOT NULL,
         dateEmprunts VARCHAR(255),
-        disponibiliteEmprunts BOOLEAN,
         renduEmprunts BOOLEAN,
-        id_utilisateurs INT,
+        id_utilisateurs INT NOT NULL,
+        id_livres INT NOT NULL,
         PRIMARY KEY (id_emprunts)
     ) ENGINE = InnoDB;
 
@@ -69,16 +69,9 @@ CREATE TABLE
         PRIMARY KEY (id_livres, id_genres)
     ) ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS Emprunter;
-
-CREATE TABLE
-    Emprunter (
-        id_livres int AUTO_INCREMENT NOT NULL,
-        id_emprunts INT NOT NULL,
-        PRIMARY KEY (id_livres, id_emprunts)
-    ) ENGINE = InnoDB;
-
 ALTER TABLE Emprunts ADD CONSTRAINT FK_Emprunts_id_utilisateurs FOREIGN KEY (id_utilisateurs) REFERENCES Utilisateurs (id_utilisateurs);
+
+ALTER TABLE Emprunts ADD CONSTRAINT FK_Emprunts_id_livres FOREIGN KEY (id_livres) REFERENCES Livres (id_livres);
 
 ALTER TABLE Ecrire ADD CONSTRAINT FK_Ecrire_id_livres FOREIGN KEY (id_livres) REFERENCES Livres (id_livres);
 
@@ -87,7 +80,3 @@ ALTER TABLE Ecrire ADD CONSTRAINT FK_Ecrire_id_ecrivains FOREIGN KEY (id_ecrivai
 ALTER TABLE Appartient ADD CONSTRAINT FK_Appartient_id_livres FOREIGN KEY (id_livres) REFERENCES Livres (id_livres);
 
 ALTER TABLE Appartient ADD CONSTRAINT FK_Appartient_id_genres FOREIGN KEY (id_genres) REFERENCES Genres (id_genres);
-
-ALTER TABLE Emprunter ADD CONSTRAINT FK_Emprunter_id_livres FOREIGN KEY (id_livres) REFERENCES Livres (id_livres);
-
-ALTER TABLE Emprunter ADD CONSTRAINT FK_Emprunter_id_emprunts FOREIGN KEY (id_emprunts) REFERENCES Emprunts (id_emprunts);
