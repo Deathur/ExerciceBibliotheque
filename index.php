@@ -44,7 +44,9 @@
             }
             else {
                 echo "Bonjour, " . $_SESSION['user']['nomUtilisateurs'] . " " . $_SESSION['user']['prenomUtilisateurs'] . ". Vous êtes connectés";
-                $sql = "SELECT nomLivres AS 'Nom du livre', annee AS 'Année', dispoLivres AS 'Disponibilité' FROM livres";
+                $sql = "SELECT nomLivres AS 'Nom du livre', prenomEcrivains AS 'Prenom de l\'écrivain', nomEcrivains AS 'Nom de l\'écrivain', annee AS 'Année', dispoLivres AS 'Disponibilité'  FROM `livres`
+                        INNER JOIN ecrire ON livres.id_livres = ecrire.id_livres
+                        INNER JOIN ecrivains ON ecrire.id_ecrivains = ecrivains.id_ecrivains";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
