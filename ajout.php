@@ -69,7 +69,7 @@
         </form>
         <?php
             if (isset($_POST['livreSubmit'])){
-                $NomLivre = $_POST['NomLivre'];
+                $NomLivre = htmlspecialchars($_POST['NomLivre']);
                 $anneeLivre = $_POST['anneeLivre'];
                 
                 $sqlGenre = "INSERT INTO `livres`(`nomLivres`, `annee`, `dispoLivres`) VALUES ('$NomLivre','$anneeLivre', '1')";

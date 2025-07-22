@@ -88,12 +88,22 @@
                     echo "<br>";
                     echo "<br>";
                 }
-                
                 echo '
                 <form method="POST">
                     <input type="submit" name="deconnexion" value="Se déconnecter">
                 </form>
                 ';
+                echo "<hr>";
+                $idUser = $_SESSION['user']['id_utilisateurs'];
+                $sqlUser = "SELECT * FROM `emprunts` WHERE id_emprunts = $idUser";
+                $stmtUser = $pdo->prepare($sqlUser);
+                $stmtUser->execute();
+                $resultsUser = $stmtUser->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($results as $key=>$value){
+                    foreach($value as $key2=>$value2){
+                        var_dump($value2);
+                    }
+                }
             }
             
             if(isset($_POST['submitConnect'])){
