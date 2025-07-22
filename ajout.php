@@ -79,5 +79,71 @@
             }
         ?>
         <hr>
+        <p>Liaison Écrivain/Livres</p>
+        <form method="POST">
+            <select name="Livres">
+                <?php
+                $sqlLivres = "SELECT * FROM livres";
+                $stmtLivres = $pdo->prepare($sqlLivres);
+                $stmtLivres->execute([]);
+                foreach ($stmtLivres as $key => $value) {
+                    echo "<option value=\"$value[idLivres]\">$value[nomLivres]</option>";
+                }
+                ?>
+            </select>
+            <select name="Ecrivains">
+                <?php
+                $sqlLivres = "SELECT * FROM ecrivains";
+                $stmtLivres = $pdo->prepare($sqlLivres);
+                $stmtLivres->execute([]);
+                foreach ($stmtLivres as $key => $value) {
+                    echo "<option value=\"$value[id_ecrivains]\">$value[nomEcrivains]</option>";
+                }
+                ?>
+            </select>
+            <select name="Genre">
+                <?php
+                $sqlLivres = "SELECT * FROM genres";
+                $stmtLivres = $pdo->prepare($sqlLivres);
+                $stmtLivres->execute([]);
+                foreach ($stmtLivres as $key => $value) {
+                    echo "<option value=\"$value[id_genres]\">$value[nomGenres]</option>";
+                }
+                ?>
+            </select>
+            <input type="submit" name="submitLink">
+        </form>
+            <?php
+                if (isset($_POST['submitLink'])){
+                    $Livres = $_POST['Livres'];
+                    $Ecrivains = $_POST['Ecrivains'];
+                    $Genre = $_POST['Genre'];
+                    $sqlLiaison = "INSERT INTO `ecrire`(`idLivres`, `id_ecrivains`) VALUES ('$Livres','$Ecrivains')";
+                    $stmtLiaison = $pdo->prepare($sqlLiaison);
+                    $stmtLiaison->execute();
+                    $sqlLiaison = "INSERT INTO `appartient`(`id_livres`, `id_genres`) VALUES ('$Livres','$Genre')";
+                    $stmtLiaison = $pdo->prepare($sqlLiaison);
+                    $stmtLiaison->execute();
+                }
+            ?>
+        <hr>
+        <?php
+            $sqlAll = "SELECT nomLivres as 'Nom du livre', nomEcrivains as 'Nom de l\'écrivain', prenomEcrivains as 'Prénom de l\'écrivain', nomGenres as 'Genre' FROM `livres`
+                INNER JOIN appartient ON livres.idLivres = appartient.id_livres
+                INNER JOIN genres ON appartient.id_genres = genres.id_genres
+                INNER JOIN ecrire ON livres.idLivres = ecrire.idLivres
+                INNER JOIN ecrivains ON ecrire.id_ecrivains = ecrivains.id_ecrivains";
+            $stmtAll = $pdo->prepare($sqlAll);
+            $stmtAll->execute();
+            $resultsAll = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($resultsAll as $key=>$value){
+                foreach($value as $key2=>$value2){
+                    echo $key2.": ".$value2;
+                    echo '<br>';
+                }
+                echo '<br>';
+            }
+        
+        ?>
     </body>
 </html>

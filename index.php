@@ -44,8 +44,8 @@
             }
             else {
                 echo "Bonjour, " . $_SESSION['user']['nomUtilisateurs'] . " " . $_SESSION['user']['prenomUtilisateurs'] . ". Vous êtes connectés";
-                $sql = "SELECT nomLivres AS 'Nom du livre', prenomEcrivains AS 'Prenom de l\'écrivain', nomEcrivains AS 'Nom de l\'écrivain', annee AS 'Année', dispoLivres AS 'Disponibilité'  FROM `livres`
-                        INNER JOIN ecrire ON livres.id_livres = ecrire.id_livres
+                $sql = "SELECT livres.idLivres AS 'ID', nomLivres AS 'Nom du livre', nomEcrivains AS 'Nom de l\'écrivain', dispoLivres AS 'Disponibilité'  FROM `livres`
+                        INNER JOIN ecrire ON livres.idLivres = ecrire.idLivres
                         INNER JOIN ecrivains ON ecrire.id_ecrivains = ecrivains.id_ecrivains";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
@@ -61,12 +61,30 @@
                             else {
                                 echo "$key2: Indisponible";
                             }
+                            break;
+                        }
+                        if ($key2 == "ID"){
+                            $idASupprimer = $value2;
                         }
                         else {
                             echo "$key2: $value2";
                         }
                         echo "<br>";
                     }
+                    echo "<form method='POST'>";
+                    echo '<a href="index.php?id=' . $idASupprimer . '">Modifier</a>';
+                    echo "</form>";
+                    
+
+                    $sql = "SELECT * FROM livres";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute();
+                    $resultsAll = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($resultsAll as $key => $value) {
+                        $idASupprimer = $value['idLivres'];
+                        break;
+                    }
+                    
                     echo "<br>";
                     echo "<br>";
                 }
@@ -77,6 +95,7 @@
                 </form>
                 ';
             }
+            
             if(isset($_POST['submitConnect'])){
                 $nom = $_POST['nom'];
                 $mail = $_POST['mail'];
@@ -105,8 +124,84 @@
                     session_destroy();
                     header("Location: index.php");
             }
-
             
+            if(isset($_GET['id'])){
+                $idToUpdate = $_GET['id'];
+                $user = $_SESSION['user']['id_utilisateurs'];
+                $sqlSearch = "SELECT * FROM livres WHERE idLivres = $idToUpdate";
+                $stmtSearch = $pdo->prepare($sqlSearch);
+                $stmtSearch->execute();
+                $resultsSearch = $stmtSearch->fetchAll(PDO::FETCH_ASSOC);
+                $disponibilité = $resultsSearch[0]['dispoLivres'];
+                $jour = date("d-m-Y");
+                
+                    
+
+                if ($disponibilité == 1){
+                    $sqlUpdate = "UPDATE `livres` SET `dispoLivres`='0' WHERE idLivres = $idToUpdate";
+                    $stmtUpdate = $pdo->prepare($sqlUpdate);
+                    $stmtUpdate->execute();
+                    $sqlInsert = "INSERT INTO `emprunts`(`dateEmprunts`, `id_utilisateurs`, `id_livres`) VALUES ('$jour','$user','$idToUpdate')";
+                    $stmtInsert = $pdo->prepare($sqlInsert);
+                    $stmtInsert->execute();
+                }
+                else {
+                    $sqlVerif = "SELECT * FROM `Emprunts` WHERE id_utilisateurs = '$user' AND renduEmprunts IS NULL AND id_livres = $idToUpdate";
+                    $stmtVerif = $pdo->prepare($sqlVerif);
+                    $stmtVerif->execute();
+                    $resultsVerif = $stmtVerif->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($resultsVerif as $key=>$value){
+                        $emprunts = $value;
+                        foreach ($emprunts as $key2=>$value2){
+                            if ($key2 == 'id_livres') {
+                                $livre = $value2;
+                            }
+                        }
+                        echo "<br>";
+                    }
+                    if ($livre == $idToUpdate){
+                        $sqlUpdate = "UPDATE `livres` SET `dispoLivres`='1' WHERE idLivres = $idToUpdate";
+                        $stmtUpdate = $pdo->prepare($sqlUpdate);
+                        $stmtUpdate->execute();
+                        $sqlInsert = "UPDATE `emprunts` SET `renduEmprunts`='1' WHERE id_livres = $idToUpdate AND id_utilisateurs = $user";
+                        $stmtInsert = $pdo->prepare($sqlInsert);
+                        $stmtInsert->execute();
+                    }
+                }
+                header("Location: index.php");
+            }
+            if (isset($_GET['page']) && ($_GET['page'] == 'createAccount')){
+                echo '
+                <form method="POST">
+                    <label for="">Nom</label>
+                    <input type="text" name="nomCreate" required>
+                    <br>
+                    <label for="">Prenom</label>
+                    <input type="text" name="prenomCreate" required>
+                    <br>
+                    <label for="">Mail</label>
+                    <input type="text" name="mailCreate" required>
+                    <br>
+                    <input type="submit" name="submitCreate" value="Créer mon compte">
+                </form>
+                ';
+            }
+            if (isset($_POST['submitCreate'])){
+                $nomCreate = $_POST['nomCreate'];
+                $prenomCreate = $_POST['prenomCreate'];
+
+                $mailCreate = $_POST['mailCreate'];
+
+                $sqlCreate = "INSERT INTO `utilisateurs`(`nomUtilisateurs`, `prenomUtilisateurs`, `mailUtilisateurs`) VALUES (:nom,:prenom,:mail)";
+                $stmtCreate = $pdo->prepare($sqlCreate);
+
+                $stmtCreate->bindParam(':nom', $nomCreate);
+                $stmtCreate->bindParam(':prenom', $prenomCreate);
+                $stmtCreate->bindParam(':mail', $mailCreate);
+
+                $stmtCreate->execute();
+                header("Location: index.php");
+            }
         ?>
     </body>
 </html>
