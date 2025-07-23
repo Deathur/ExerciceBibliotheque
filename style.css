@@ -1,0 +1,11 @@
+.gridLivre {
+    display: grid;
+    grid-template-columns: repeat(5, 20%);
+    gap: 10px;
+    grid-auto-rows: auto;
+}
+.flex {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

@@ -22,6 +22,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <?php 
@@ -43,16 +44,16 @@
                     ';   
             }
             else {
-                echo "Bonjour, " . $_SESSION['user']['nomUtilisateurs'] . " " . $_SESSION['user']['prenomUtilisateurs'] . ". Vous êtes connectés";
-                $sql = "SELECT livres.idLivres AS 'ID', nomLivres AS 'Nom du livre', nomEcrivains AS 'Nom de l\'écrivain', dispoLivres AS 'Disponibilité'  FROM `livres`
+                echo "<h2>Bonjour, " . $_SESSION['user']['nomUtilisateurs'] . " " . $_SESSION['user']['prenomUtilisateurs'] . ". Vous êtes connecté</h2>";
+                $sql = "SELECT livres.idLivres AS 'ID', nomLivres AS 'Nom du livre', nomEcrivains AS 'Nom de l\'écrivain', prenomEcrivains AS 'Prénom de l\'écrivain', dispoLivres AS 'Disponibilité'  FROM `livres`
                         INNER JOIN ecrire ON livres.idLivres = ecrire.idLivres
                         INNER JOIN ecrivains ON ecrire.id_ecrivains = ecrivains.id_ecrivains";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo '<br>';
-                echo '<br>';
+                echo "<div class=gridLivre>";
                 foreach ($results as $key => $value) {
+                    echo "<div>";
                     foreach ($value as $key2 => $value2) {
                         if ($key2 == "Disponibilité"){
                             if ($value2 == 1){
@@ -68,8 +69,8 @@
                         }
                         else {
                             echo "$key2: $value2";
+                            echo "<br>";
                         }
-                        echo "<br>";
                     }
                     echo "<form method='POST'>";
                     echo '<a href="index.php?id=' . $idASupprimer . '">Modifier</a>';
@@ -84,25 +85,48 @@
                         $idASupprimer = $value['idLivres'];
                         break;
                     }
-                    
-                    echo "<br>";
-                    echo "<br>";
+                    echo "</div>";
                 }
+                echo "</div>";
                 echo '
-                <form method="POST">
+                <br><form method="POST">
                     <input type="submit" name="deconnexion" value="Se déconnecter">
                 </form>
                 ';
                 echo "<hr>";
                 $idUser = $_SESSION['user']['id_utilisateurs'];
-                $sqlUser = "SELECT * FROM `emprunts` WHERE id_emprunts = $idUser";
+                $sqlUser = "SELECT nomLivres AS 'Nom du livre', dateEmprunts AS 'Date de l\'emprunts', renduEmprunts AS 'Rendu' FROM `emprunts` 
+                            INNER JOIN livres ON emprunts.id_livres = livres.idLivres
+                            WHERE id_utilisateurs = $idUser";
                 $stmtUser = $pdo->prepare($sqlUser);
                 $stmtUser->execute();
                 $resultsUser = $stmtUser->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($results as $key=>$value){
-                    foreach($value as $key2=>$value2){
-                        var_dump($value2);
+                if ($resultsUser){
+                    echo "<div class=flex>";
+                    foreach ($resultsUser as $key=>$value){
+                        echo "<div class=cell>";
+                        foreach($value as $key2=>$value2){
+                            if ($key2 == 'Rendu') {
+                                if ($value2 == 1) {
+                                    echo "Rendu";
+                                }
+                                else {
+                                    echo "Pas encore rendu";
+                                }
+                            }
+                            else {
+                                echo $key2.': '.$value2;
+                            }
+                            echo '<br>';
+                            
+                        }
+                        echo '</div>';
                     }
+                    echo '</div>';
+
+                }
+                else {
+                    echo "Vous n'avez encore prêté aucun livre !";
                 }
             }
             

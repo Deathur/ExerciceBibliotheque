@@ -128,7 +128,7 @@
             ?>
         <hr>
         <?php
-            $sqlAll = "SELECT nomLivres as 'Nom du livre', nomEcrivains as 'Nom de l\'écrivain', prenomEcrivains as 'Prénom de l\'écrivain', nomGenres as 'Genre' FROM `livres`
+            $sqlAll = "SELECT livres.idLivres, nomLivres as 'Nom du livre', nomEcrivains as 'Nom de l\'écrivain', prenomEcrivains as 'Prénom de l\'écrivain', nomGenres as 'Genre' FROM `livres`
                 INNER JOIN appartient ON livres.idLivres = appartient.id_livres
                 INNER JOIN genres ON appartient.id_genres = genres.id_genres
                 INNER JOIN ecrire ON livres.idLivres = ecrire.idLivres
@@ -137,13 +137,101 @@
             $stmtAll->execute();
             $resultsAll = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
             foreach ($resultsAll as $key=>$value){
+                $idASupprimer = $value['idLivres'];
+                echo "<form method='POST'>";
+                echo "<input type=\"hidden\" name=\"idDelete\" value='$idASupprimer'><br>";
                 foreach($value as $key2=>$value2){
-                    echo $key2.": ".$value2;
-                    echo '<br>';
+                    if ($key2 !== "idLivres"){
+                        echo $key2.": ".$value2;
+                        echo '<br>';
+                    }
                 }
+                echo '<a href="ajout.php?id=' . $idASupprimer . '">Modifier</a>';
+                echo "<input type=\"submit\" name=\"submitDelete\" value=\"supprimer\"><br>";
+                echo "</form>";
                 echo '<br>';
             }
-        
+            if(isset($_GET['id'])){
+                $id = $_GET['id'];
+                $sqlId = "SELECT * FROM livres WHERE idLivres = '$id'";
+
+                $stmtId = $pdo->prepare($sqlId);
+                $stmtId->execute();
+                
+                $resultsId = $stmtId->fetchAll(PDO::FETCH_ASSOC);
+                echo '<form method="POST">
+                <label for="">Nom du livre</label>
+                <input type="text" name="nomLivresUpdate" value="' . htmlspecialchars_decode($resultsId[0]['nomLivres']) . '">
+                <br>
+                <label for="">Année</label>
+                <input type="text" name="anneeUpdate" value="' . htmlspecialchars_decode($resultsId[0]['annee']) . '">
+                <br>
+                <label for="">Auteur</label>
+                <select name=ecrivainChoiceUpdate>
+                ';
+                
+                $sqlLivres = "SELECT * FROM ecrivains";
+                $stmtLivres = $pdo->prepare($sqlLivres);
+                $stmtLivres->execute([]);
+                foreach ($stmtLivres as $key => $value) {
+                    echo "<option value=\"$value[id_ecrivains]\">$value[nomEcrivains]</option>";
+                }
+                echo '
+                </select>
+                <br>
+                <label for="">Genre</label>
+                <select name="genreChoiceUpdate">
+                ';
+                $sqlLivres = "SELECT * FROM genres";
+                $stmtLivres = $pdo->prepare($sqlLivres);
+                $stmtLivres->execute([]);
+                foreach ($stmtLivres as $key => $value) {
+                    echo "<option value=\"$value[id_genres]\">$value[nomGenres]</option>";
+                }
+                echo '
+                </select>
+                <br>
+                <input type="submit" name="submitUpdate" Value="Mettre à jour la BDD">
+                </form>';
+                
+            }
+            if (isset($_POST['submitUpdate'])){
+                $idUpdate = $_GET['id'];
+                $nomLivresUpdate = htmlspecialchars($_POST['nomLivresUpdate']);
+                $anneeUpdate = $_POST['anneeUpdate'];
+                $ecrivainUpdate = $_POST['ecrivainChoiceUpdate'];
+                $genreUpdate = $_POST['genreChoiceUpdate'];
+                echo $idUpdate." ".$nomLivresUpdate." ".$ecrivainUpdate." ".$genreUpdate;
+                
+                $sqlUpdate = "UPDATE `livres` SET `nomLivres`='$nomLivresUpdate',`annee`='$anneeUpdate' WHERE idLivres = '$idUpdate'";
+                $stmtUpdate = $pdo->prepare($sqlUpdate);
+                $stmtUpdate->execute();
+                $sqlUpdate = "UPDATE `ecrire` SET `id_ecrivains`='$ecrivainUpdate' WHERE idLivres = '$idUpdate'";
+                $stmtUpdate = $pdo->prepare($sqlUpdate);
+                $stmtUpdate->execute();
+                $sqlUpdate = "UPDATE `appartient` SET `id_genres`='$genreUpdate' WHERE id_livres = '$idUpdate'";
+                $stmtUpdate = $pdo->prepare($sqlUpdate);
+                $stmtUpdate->execute();
+                header("Location: ajout.php");
+                
+                
+            }
+            if(isset($_POST['submitDelete'])){
+                $idToDelete = $_POST['idDelete'];
+                $sqlDelete = "DELETE FROM `emprunts` WHERE id_livres = '$idToDelete'";
+                $stmt = $pdo->prepare($sqlDelete);
+                $stmt->execute();
+                $sqlDelete = "DELETE FROM `ecrire` WHERE idLivres = '$idToDelete'";
+                $stmt = $pdo->prepare($sqlDelete);
+                $stmt->execute();
+                $sqlDelete = "DELETE FROM `appartient` WHERE id_livres = '$idToDelete'";
+                $stmt = $pdo->prepare($sqlDelete);
+                $stmt->execute();
+                $sqlDelete = "DELETE FROM `livres` WHERE idLivres = '$idToDelete'";
+                $stmt = $pdo->prepare($sqlDelete);
+                $stmt->execute();
+                header("Location: ajout.php");
+            }
         ?>
     </body>
 </html>
