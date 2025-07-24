@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 24 juil. 2025 à 16:15
+-- Généré le : jeu. 24 juil. 2025 à 14:15
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -32,14 +32,6 @@ CREATE TABLE `appartient` (
   `id_genres` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Déchargement des données de la table `appartient`
---
-
-INSERT INTO `appartient` (`id_livres`, `id_genres`) VALUES
-(7, 1),
-(8, 5);
-
 -- --------------------------------------------------------
 
 --
@@ -50,14 +42,6 @@ CREATE TABLE `ecrire` (
   `idLivres` int(11) NOT NULL,
   `id_ecrivains` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `ecrire`
---
-
-INSERT INTO `ecrire` (`idLivres`, `id_ecrivains`) VALUES
-(7, 6),
-(8, 3);
 
 -- --------------------------------------------------------
 
@@ -71,16 +55,6 @@ CREATE TABLE `ecrivains` (
   `prenomEcrivains` varchar(255) DEFAULT NULL,
   `nationalitéEcrivains` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `ecrivains`
---
-
-INSERT INTO `ecrivains` (`id_ecrivains`, `nomEcrivains`, `prenomEcrivains`, `nationalitéEcrivains`) VALUES
-(3, 'Proust', 'Marcel', 'Française'),
-(5, 'Baelen', 'Matthieu', 'Française'),
-(6, 'Rowling', 'J.K', 'Anglaise'),
-(7, 'aa', 'aa', 'Liberland');
 
 -- --------------------------------------------------------
 
@@ -96,16 +70,6 @@ CREATE TABLE `emprunts` (
   `id_livres` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Déchargement des données de la table `emprunts`
---
-
-INSERT INTO `emprunts` (`id_emprunts`, `dateEmprunts`, `renduEmprunts`, `id_utilisateurs`, `id_livres`) VALUES
-(86, '23-07-2025', 1, 1, 7),
-(89, '23-07-2025', 1, 1, 7),
-(90, '23-07-2025', 1, 1, 7),
-(92, '24-07-2025', 1, 1, 7);
-
 -- --------------------------------------------------------
 
 --
@@ -116,17 +80,6 @@ CREATE TABLE `genres` (
   `id_genres` int(11) NOT NULL,
   `nomGenres` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `genres`
---
-
-INSERT INTO `genres` (`id_genres`, `nomGenres`) VALUES
-(1, 'Fantastique'),
-(2, 'Science Fiction'),
-(3, 'Biopic'),
-(4, 'Littéraire'),
-(5, 'Scientifique');
 
 -- --------------------------------------------------------
 
@@ -141,14 +94,6 @@ CREATE TABLE `livres` (
   `dispoLivres` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Déchargement des données de la table `livres`
---
-
-INSERT INTO `livres` (`idLivres`, `nomLivres`, `annee`, `dispoLivres`) VALUES
-(7, 'Harry Potter à l&#039;École des Sorciers', 1997, 1),
-(8, 'A la recherche du temps perdu', 1907, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -161,15 +106,6 @@ CREATE TABLE `utilisateurs` (
   `prenomUtilisateurs` varchar(255) DEFAULT NULL,
   `mailUtilisateurs` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `utilisateurs`
---
-
-INSERT INTO `utilisateurs` (`id_utilisateurs`, `nomUtilisateurs`, `prenomUtilisateurs`, `mailUtilisateurs`) VALUES
-(1, 'Baelen', 'Matthieu', 'aa'),
-(2, 'Forever', 'Michel', 'aa'),
-(3, 'test', 'test', 'test');
 
 --
 -- Index pour les tables déchargées
@@ -229,43 +165,43 @@ ALTER TABLE `utilisateurs`
 -- AUTO_INCREMENT pour la table `appartient`
 --
 ALTER TABLE `appartient`
-  MODIFY `id_livres` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_livres` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `ecrire`
 --
 ALTER TABLE `ecrire`
-  MODIFY `idLivres` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idLivres` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `ecrivains`
 --
 ALTER TABLE `ecrivains`
-  MODIFY `id_ecrivains` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_ecrivains` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `emprunts`
 --
 ALTER TABLE `emprunts`
-  MODIFY `id_emprunts` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id_emprunts` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `genres`
 --
 ALTER TABLE `genres`
-  MODIFY `id_genres` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_genres` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `livres`
 --
 ALTER TABLE `livres`
-  MODIFY `idLivres` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idLivres` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `utilisateurs`
 --
 ALTER TABLE `utilisateurs`
-  MODIFY `id_utilisateurs` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_utilisateurs` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Contraintes pour les tables déchargées
