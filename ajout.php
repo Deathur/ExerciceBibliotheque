@@ -193,7 +193,9 @@
                 <br>
                 <input type="submit" name="submitUpdate" Value="Mettre à jour la BDD">
                 <input type="submit" name="submitAnnule" Value="Annuler">
-                </form>';
+                </form>
+                '
+                ;
                 
             }
             if (isset($_POST['submitUpdate'])){
