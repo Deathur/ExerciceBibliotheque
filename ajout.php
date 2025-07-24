@@ -146,7 +146,7 @@
                         echo '<br>';
                     }
                 }
-                echo '<a href="ajout.php?id=' . $idASupprimer . '">Modifier</a>';
+                echo '<a href="ajout.php?id=' . $idASupprimer . '">Modifier</a><br>';
                 echo "<input type=\"submit\" name=\"submitDelete\" value=\"supprimer\"><br>";
                 echo "</form>";
                 echo '<br>';
@@ -192,6 +192,7 @@
                 </select>
                 <br>
                 <input type="submit" name="submitUpdate" Value="Mettre à jour la BDD">
+                <input type="submit" name="submitAnnule" Value="Annuler">
                 </form>';
                 
             }
@@ -230,6 +231,9 @@
                 $sqlDelete = "DELETE FROM `livres` WHERE idLivres = '$idToDelete'";
                 $stmt = $pdo->prepare($sqlDelete);
                 $stmt->execute();
+                header("Location: ajout.php");
+            }
+            if(isset($_POST['submitAnnule'])){
                 header("Location: ajout.php");
             }
         ?>
