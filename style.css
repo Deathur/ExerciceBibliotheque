@@ -1,5 +1,5 @@
 :root {
-    background-color: gray;
+    background-color: rgb(177, 177, 177);
 }
 .gridLivre {
     display: grid;
@@ -7,11 +7,17 @@
     gap: 10px;
     grid-auto-rows: auto;
 }
+.gridLivre div {
+    border: 1px solid;
+    text-align: center;
+}
 .flex {
+    width: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-input {
-    border-radius: 10%;
+input, select {
+    border-radius: 5%;
+    background: rgba(230, 230, 230, 0.801);
 }

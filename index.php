@@ -21,10 +21,11 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bibliothèque</title>
+        <title>Bibliothèque Alakon</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <h1>Bibliothèque Alakon</h1>
         <?php 
             if(!isset($_SESSION['user'])){
                     echo '
@@ -73,7 +74,7 @@
                         }
                     }
                     echo "<form method='POST'>";
-                    echo '<a href="index.php?id=' . $idASupprimer . '">Modifier</a>';
+                    echo '<a href="index.php?id=' . $idASupprimer . '">Réserver</a>';
                     echo "</form>";
                     
 
