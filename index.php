@@ -123,7 +123,7 @@
                         }
                         echo '</div>';
                     }
-                    echo '</div>';
+                    echo '</div><hr>';
 
                 }
                 else {
