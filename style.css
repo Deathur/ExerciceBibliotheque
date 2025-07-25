@@ -1,3 +1,6 @@
+:root {
+    background-color: gray;
+}
 .gridLivre {
     display: grid;
     grid-template-columns: repeat(5, 20%);
@@ -8,4 +11,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+input {
+    border-radius: 10%;
 }
