@@ -7,12 +7,12 @@
     gap: 10px;
     grid-auto-rows: auto;
 }
-.gridLivre div {
-    border: 1px solid;
+.gridCell {
     text-align: center;
+    border: 1px solid;
+    border-radius: 10px;
 }
 .flex {
-    width: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;

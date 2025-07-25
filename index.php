@@ -54,7 +54,7 @@
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo "<div class=gridLivre>";
                 foreach ($results as $key => $value) {
-                    echo "<div>";
+                    echo "<div class=gridCell>";
                     foreach ($value as $key2 => $value2) {
                         if ($key2 == "Disponibilité"){
                             if ($value2 == 1){
