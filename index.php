@@ -52,9 +52,9 @@
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo "<div class=gridLivre>";
+                echo "<div class='gridLivre'>";
                 foreach ($results as $key => $value) {
-                    echo "<div class=gridCell>";
+                    echo "<div class='gridCell'>";
                     foreach ($value as $key2 => $value2) {
                         if ($key2 == "Disponibilité"){
                             if ($value2 == 1){
@@ -103,9 +103,9 @@
                 $stmtUser->execute();
                 $resultsUser = $stmtUser->fetchAll(PDO::FETCH_ASSOC);
                 if ($resultsUser){
-                    echo "<div class=flex>";
+                    echo "<div class='flex'>";
                     foreach ($resultsUser as $key=>$value){
-                        echo "<div class=cell>";
+                        echo "<div class='cell'>";
                         foreach($value as $key2=>$value2){
                             if ($key2 == 'Rendu') {
                                 if ($value2 == 1) {
@@ -176,8 +176,11 @@
                     $sqlUpdate = "UPDATE `livres` SET `dispoLivres`='0' WHERE idLivres = $idToUpdate";
                     $stmtUpdate = $pdo->prepare($sqlUpdate);
                     $stmtUpdate->execute();
-                    $sqlInsert = "INSERT INTO `emprunts`(`dateEmprunts`, `id_utilisateurs`, `id_livres`) VALUES ('$jour','$user','$idToUpdate')";
+                    $sqlInsert = "INSERT INTO `emprunts`(`dateEmprunts`, `id_utilisateurs`, `id_livres`) VALUES (':jour',':user',':idToUpdate')";
                     $stmtInsert = $pdo->prepare($sqlInsert);
+                    $stmtCreate->bindParam(':jour', $jour);
+                    $stmtCreate->bindParam(':user', $user);
+                    $stmtCreate->bindParam(':idToUpdate', $idToUpdate);
                     $stmtInsert->execute();
                 }
                 else {
