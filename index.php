@@ -26,6 +26,8 @@
     </head>
     <body>
         <h1>Bibliothèque Alakon</h1>
+        <p><a href="ajout.php">Administration</a><p>
+        <hr>
         <?php 
             if(!isset($_SESSION['user'])){
                     echo '

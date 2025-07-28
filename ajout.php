@@ -22,6 +22,8 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <p><a href="index.php">Retour connexion utilisateur</a></p>
+        <hr>
         <p>Ajout d'écrivains</p>
         <form method='POST'>
             <label for="">Nom</label>
